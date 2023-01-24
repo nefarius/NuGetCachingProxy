@@ -3,17 +3,18 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
+EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["src/NuGetCachingProxy.csproj", "NuGetCachingProxy/"]
-RUN dotnet restore "NuGetCachingProxy/NuGetCachingProxy.csproj"
+COPY ["src/NuGetCachingProxy.csproj", "src/"]
+RUN dotnet restore "src/NuGetCachingProxy.csproj"
 COPY . .
-WORKDIR "/src/NuGetCachingProxy"
+WORKDIR "/src/src"
 RUN dotnet build "NuGetCachingProxy.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "NuGetCachingProxy.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "NuGetCachingProxy.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
