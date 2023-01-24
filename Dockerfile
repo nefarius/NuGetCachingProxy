@@ -6,7 +6,7 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["NuGetCachingProxy/NuGetCachingProxy.csproj", "NuGetCachingProxy/"]
+COPY ["src/NuGetCachingProxy.csproj", "NuGetCachingProxy/"]
 RUN dotnet restore "NuGetCachingProxy/NuGetCachingProxy.csproj"
 COPY . .
 WORKDIR "/src/NuGetCachingProxy"
