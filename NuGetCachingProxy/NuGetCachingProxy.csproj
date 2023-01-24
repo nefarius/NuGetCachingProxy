@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageReference Include="Nefarius.Utilities.AspNetCore" Version="1.4.1" />
+    <PackageReference Include="Yarp.ReverseProxy" Version="2.0.0-rc.1.23068.3" />
   </ItemGroup>
 
 </Project>

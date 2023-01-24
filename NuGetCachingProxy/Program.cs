@@ -1,32 +1,47 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 
-// Add services to the container.
+using Nefarius.Utilities.AspNetCore;
 
-var app = builder.Build();
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args).Setup();
 
-// Configure the HTTP request pipeline.
-
-var summaries = new[]
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+builder.Services.AddResponseCaching(options =>
 {
-	"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-	var forecast = Enumerable.Range(1, 5).Select(index =>
-		new WeatherForecast
-		(
-			DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-			Random.Shared.Next(-20, 55),
-			summaries[Random.Shared.Next(summaries.Length)]
-		))
-		.ToArray();
-	return forecast;
+    options.UseCaseSensitivePaths = false;
+    options.SizeLimit *= 10; // 1 GB
 });
 
-app.Run();
+WebApplication app = builder.Build().Setup();
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+app.Use(async (context, next) =>
 {
-	public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+    IHeaderDictionary requestHeaders = context.Request.Headers;
+    StringValues cacheControl = requestHeaders.CacheControl;
+
+    if (!string.IsNullOrEmpty(cacheControl))
+    {
+        requestHeaders.CacheControl = new StringValues("max-stale");
+    }
+
+    await next(context);
+});
+
+app.UseResponseCaching();
+
+app.Use(async (context, next) =>
+{
+    context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue
+    {
+        Public = true, MaxAge = TimeSpan.FromDays(1)
+    };
+
+    context.Response.Headers[HeaderNames.Vary] = new[] { "Accept-Encoding" };
+
+    await next(context);
+});
+
+app.MapReverseProxy();
+
+app.Run();
