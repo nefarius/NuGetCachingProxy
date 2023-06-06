@@ -2,6 +2,8 @@
 
 # NuGetCachingProxy
 
+[![Docker Image CI](https://github.com/nefarius/NuGetCachingProxy/actions/workflows/docker-image.yml/badge.svg)](https://github.com/nefarius/NuGetCachingProxy/actions/workflows/docker-image.yml)
+
 TBD
 
 ## Sources & 3rd party credits
