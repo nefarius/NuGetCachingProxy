@@ -13,4 +13,9 @@ public sealed class PackageDownloadRequest : FileEntity
     public string PackageVersion { get; set; } = null!;
 
     public string PackageFileName { get; set; } = null!;
+
+    public override string ToString()
+    {
+        return $"{PackageId} ({PackageVersion})";
+    }
 }
