@@ -45,6 +45,8 @@ public sealed class PackageDownloadEndpoint : Endpoint<PackageDownloadRequest>
             await SendStreamAsync(ms, existingPackage.PackageFileName, cancellation: ct);
             return;
         }
+        
+        _logger.LogInformation("Fetching package {@Package} from upstream", existingPackage);
 
         HttpClient client = _clientFactory.CreateClient("UpstreamNuGetServer");
 

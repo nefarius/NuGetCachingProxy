@@ -6,6 +6,7 @@ services:
     container_name: ngcp-app
     volumes:
       - ./data/logs:/app/logs
+      - ./data/keys:/root/.aspnet
     restart: unless-stopped
     depends_on: 
       - ngcp-db
