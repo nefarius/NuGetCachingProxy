@@ -1,16 +1,20 @@
 version: "3"
 
 services:
-  nuget.example.org:
+  ngcp-app:
     image: containinger/nugetcachingproxy:latest
-    container_name: nuget.example.org
+    container_name: ngcp-app
     volumes:
       - ./data/logs:/app/logs
     restart: unless-stopped
+    depends_on: 
+      - ngcp-db
     networks:
       - web
+      - database
     environment:
       - TZ=Europe/Vienna
+      - ServiceConfig__ConnectionString=mongodb://wdscp-db:27017/
     labels:
       - traefik.enable=true
       - traefik.http.routers.nuget-cache.rule=Host(`nuget.example.org`)
@@ -23,6 +27,25 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  ngcp-db:
+    image: mongo:5
+    container_name: wdscp-db
+    restart: unless-stopped
+    volumes:
+      - ./data/mongo/db:/data/db
+      - ./data/mongo/config:/data/configdb
+    environment:
+      - TZ=Europe/Vienna
+    networks:
+      - database
+    labels:
+      - traefik.enable=false
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
 networks:
+  database:
   web:
     external: true
