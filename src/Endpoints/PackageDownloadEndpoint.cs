@@ -36,7 +36,7 @@ public sealed class PackageDownloadEndpoint : Endpoint<PackageDownloadRequest>
         // cached entry found
         if (existingPackage is not null)
         {
-            _logger.LogInformation("Found cached package {@Package}", existingPackage);
+            _logger.LogInformation("Found cached package {Package}", existingPackage);
 
             // deliver cached copy of symbol blob
             using MemoryStream ms = new();
@@ -55,7 +55,7 @@ public sealed class PackageDownloadEndpoint : Endpoint<PackageDownloadRequest>
 
         if (!response.IsSuccessStatusCode)
         {
-            _logger.LogInformation("Requested package {@Package} not found upstream", req);
+            _logger.LogInformation("Requested package {Package} not found upstream", req);
 
             await SendNotFoundAsync(ct);
             return;
