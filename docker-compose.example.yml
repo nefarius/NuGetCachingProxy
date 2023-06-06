@@ -15,7 +15,7 @@ services:
       - database
     environment:
       - TZ=Europe/Vienna
-      - ServiceConfig__ConnectionString=mongodb://wdscp-db:27017/
+      - ServiceConfig__ConnectionString=mongodb://ngcp-db:27017/
     labels:
       - traefik.enable=true
       - traefik.http.routers.nuget-cache.rule=Host(`nuget.example.org`)
@@ -30,7 +30,7 @@ services:
 
   ngcp-db:
     image: mongo:5
-    container_name: wdscp-db
+    container_name: ngcp-db
     restart: unless-stopped
     volumes:
       - ./data/mongo/db:/data/db
