@@ -46,7 +46,7 @@ public sealed class PackageDownloadEndpoint : Endpoint<PackageDownloadRequest>
             return;
         }
         
-        _logger.LogInformation("Fetching package {@Package} from upstream", existingPackage);
+        _logger.LogInformation("Fetching package {Package} from upstream", req);
 
         HttpClient client = _clientFactory.CreateClient("UpstreamNuGetServer");
 
