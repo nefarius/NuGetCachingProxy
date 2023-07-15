@@ -50,12 +50,6 @@ public sealed class PackageDownloadEndpoint : Endpoint<PackageDownloadRequest>
         }
         catch (InvalidOperationException ex)
         {
-            if (existingPackage is not null)
-            {
-                // might be corrupted, throw away and retry upload
-                await existingPackage.Data.DeleteBinaryChunks(cancellation: ct);
-            }
-
             _logger.LogWarning(ex, "Failed to deliver cached package, fetching from upstream");
         }
 
