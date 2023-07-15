@@ -33,19 +33,32 @@ public sealed class PackageDownloadEndpoint : Endpoint<PackageDownloadRequest>
                     , ct)
             ).FirstOrDefault();
 
-        // cached entry found
-        if (existingPackage is not null)
+        try
         {
-            _logger.LogInformation("Found cached package {Package}", existingPackage);
+            // cached entry found
+            if (existingPackage is not null)
+            {
+                _logger.LogInformation("Found cached package {Package}", existingPackage);
 
-            // deliver cached copy of symbol blob
-            using MemoryStream ms = new();
-            await existingPackage.Data.DownloadAsync(ms, cancellation: ct);
-            ms.Position = 0;
-            await SendStreamAsync(ms, existingPackage.PackageFileName, cancellation: ct);
-            return;
+                // deliver cached copy of symbol blob
+                using MemoryStream ms = new();
+                await existingPackage.Data.DownloadAsync(ms, cancellation: ct);
+                ms.Position = 0;
+                await SendStreamAsync(ms, existingPackage.PackageFileName, cancellation: ct);
+                return;
+            }
         }
-        
+        catch (InvalidOperationException ex)
+        {
+            if (existingPackage is not null)
+            {
+                // might be corrupted, throw away and retry upload
+                await existingPackage.Data.DeleteBinaryChunks(cancellation: ct);
+            }
+
+            _logger.LogWarning(ex, "Failed to deliver cached package, fetching from upstream");
+        }
+
         _logger.LogInformation("Fetching package {Package} from upstream", req);
 
         HttpClient client = _clientFactory.CreateClient("UpstreamNuGetServer");
