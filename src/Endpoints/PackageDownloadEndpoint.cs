@@ -1,3 +1,5 @@
+using System.Net;
+
 using FastEndpoints;
 
 using MongoDB.Entities;
@@ -38,7 +40,10 @@ public sealed class PackageDownloadEndpoint : Endpoint<PackageDownloadRequest>
             // cached entry found
             if (existingPackage is not null)
             {
-                _logger.LogInformation("Found cached package {Package}", existingPackage);
+                IPAddress? remoteIpAddress = HttpContext.Request.HttpContext.Connection.RemoteIpAddress;
+
+                _logger.LogInformation("[{IpAddress}] Found cached package {Package}", remoteIpAddress,
+                    existingPackage);
 
                 // deliver cached copy of symbol blob
                 using MemoryStream ms = new();
