@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 using MongoDB.Entities;
 
-namespace Nefarius.Web.Caching.Models;
+namespace NuGetCachingProxy.Models;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]

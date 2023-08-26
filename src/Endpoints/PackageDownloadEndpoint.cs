@@ -4,11 +4,11 @@ using FastEndpoints;
 
 using MongoDB.Entities;
 
-using Nefarius.Web.Caching.Models;
+using NuGetCachingProxy.Models;
 
-namespace Nefarius.Web.Caching.Endpoints;
+namespace NuGetCachingProxy.Endpoints;
 
-public sealed class PackageDownloadEndpoint : Endpoint<PackageDownloadRequest>
+internal sealed class PackageDownloadEndpoint : Endpoint<PackageDownloadRequest>
 {
     private readonly IHttpClientFactory _clientFactory;
     private readonly ILogger<PackageDownloadEndpoint> _logger;

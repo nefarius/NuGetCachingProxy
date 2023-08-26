@@ -5,11 +5,11 @@ using FastEndpoints;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Options;
 
-using Nefarius.Web.Caching.Core;
+using NuGetCachingProxy.Core;
 
-namespace Nefarius.Web.Caching.Endpoints;
+namespace NuGetCachingProxy.Endpoints;
 
-public sealed class CatchallEndpoint : EndpointWithoutRequest
+internal sealed class CatchallEndpoint : EndpointWithoutRequest
 {
     private readonly IHttpClientFactory _clientFactory;
     private readonly IOptions<ServiceConfig> _options;
