@@ -5,13 +5,14 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <!-- Do NOT use NuGet in any namespace or assembly name or FE can't discover them -->
-    <RootNamespace>Nefarius.Web.Caching</RootNamespace>
-    <AssemblyName>CachingProxy</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FastEndpoints" Version="5.15.0" />
+    <PackageReference Include="FastEndpoints" Version="5.15.0.22-beta" />
+    <PackageReference Include="FastEndpoints.Generator" Version="5.15.0.22-beta">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="7.0.10" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
     <PackageReference Include="MongoDB.Entities" Version="22.1.0" />
