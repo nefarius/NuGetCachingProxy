@@ -2,7 +2,7 @@
 
 # NuGetCachingProxy
 
-[![Docker Image CI](https://github.com/nefarius/NuGetCachingProxy/actions/workflows/docker-image.yml/badge.svg)](https://github.com/nefarius/NuGetCachingProxy/actions/workflows/docker-image.yml)
+[![Docker Image CI](https://github.com/nefarius/NuGetCachingProxy/actions/workflows/docker-image.yml/badge.svg)](https://github.com/nefarius/NuGetCachingProxy/actions/workflows/docker-image.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/containinger/nugetcachingproxy)
 
 TBD
 
