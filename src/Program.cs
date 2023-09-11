@@ -9,6 +9,7 @@ using MongoDB.Entities;
 
 using Nefarius.Utilities.AspNetCore;
 
+using NuGetCachingProxy;
 using NuGetCachingProxy.Core;
 
 using Polly;
@@ -30,7 +31,7 @@ if (serviceConfig is null)
 
 builder.Services.Configure<ServiceConfig>(builder.Configuration.GetSection(nameof(ServiceConfig)));
 
-builder.Services.AddFastEndpoints(options => options.SourceGeneratorDiscoveredTypes = DiscoveredTypes.All);
+builder.Services.AddFastEndpoints(options => options.SourceGeneratorDiscoveredTypes.AddRange(DiscoveredTypes.All));
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
