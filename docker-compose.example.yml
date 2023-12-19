@@ -22,7 +22,7 @@ services:
       - traefik.http.routers.nuget-cache.entrypoints=web-secure
       - traefik.http.routers.nuget-cache.tls=true
       - traefik.http.routers.nuget-cache.tls.certresolver=le
-      - traefik.http.services.nuget-cache.loadbalancer.server.port=80
+      - traefik.http.services.nuget-cache.loadbalancer.server.port=8080
     logging:
       options:
         max-size: "10m"
