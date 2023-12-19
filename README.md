@@ -6,6 +6,14 @@
 
 Self-hosted reverse caching proxy for [`api.nuget.org`](https://api.nuget.org/) (official [NuGet.org](https://www.nuget.org/) backend).
 
+<details><summary>Docker build</summary>
+
+```PowerShell
+docker build -t containinger/nugetcachingproxy:latest . ; docker push containinger/nugetcachingproxy:latest
+```
+
+</details>
+
 ## Sources & 3rd party credits
 
 This application benefits from these awesome projects ❤ (appearance in no special order):
