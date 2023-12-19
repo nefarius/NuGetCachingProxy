@@ -48,7 +48,11 @@ internal sealed class CatchallEndpoint(IOptions<ServiceConfig> options, IHttpCli
         // pass whatever content to client
         if (!Equals(response.Content.Headers.ContentType, MediaTypeHeaderValue.Parse("application/json")))
         {
-            await SendStreamAsync(await response.Content.ReadAsStreamAsync(ct), cancellation: ct);
+            MediaTypeHeaderValue? contentType = response.Content.Headers.ContentType;
+            await SendStreamAsync(await response.Content.ReadAsStreamAsync(ct),
+                contentType: contentType?.ToString() ?? "application/octet-stream",
+                cancellation: ct);
+            return;
         }
 
         string jsonBody = await response.Content.ReadAsStringAsync(ct);
