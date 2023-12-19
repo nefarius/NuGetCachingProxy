@@ -32,8 +32,6 @@ if (serviceConfig is null)
 builder.Services.Configure<ServiceConfig>(builder.Configuration.GetSection(nameof(ServiceConfig)));
 
 builder.Services.AddFastEndpoints(options => options.SourceGeneratorDiscoveredTypes.AddRange(DiscoveredTypes.All));
-builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 builder.Services.AddHttpClient("UpstreamNuGetServer",
         client =>
@@ -60,6 +58,5 @@ WebApplication app = builder.Build().Setup();
 
 app.UseRouting();
 app.MapFastEndpoints();
-app.MapReverseProxy();
 
 app.Run();

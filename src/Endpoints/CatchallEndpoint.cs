@@ -9,6 +9,11 @@ using NuGetCachingProxy.Core;
 
 namespace NuGetCachingProxy.Endpoints;
 
+/// <summary>
+///     This endpoint creates all other requests to the upstream server in proxy. This is required to replace the upstream
+///     URL with this proxy server URL so the client actually fetches cached resources from us instead of directly going to
+///     the upstream.
+/// </summary>
 internal sealed class CatchallEndpoint(IOptions<ServiceConfig> options, IHttpClientFactory clientFactory)
     : EndpointWithoutRequest
 {
@@ -33,7 +38,10 @@ internal sealed class CatchallEndpoint(IOptions<ServiceConfig> options, IHttpCli
         // pass error to client
         if (!response.IsSuccessStatusCode)
         {
-            await SendErrorsAsync((int)response.StatusCode, ct);
+            MediaTypeHeaderValue? contentType = response.Content.Headers.ContentType;
+            await SendStreamAsync(await response.Content.ReadAsStreamAsync(ct),
+                contentType: contentType?.ToString() ?? "application/octet-stream",
+                cancellation: ct);
             return;
         }
 

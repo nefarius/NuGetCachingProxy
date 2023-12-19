@@ -8,6 +8,10 @@ using NuGetCachingProxy.Models;
 
 namespace NuGetCachingProxy.Endpoints;
 
+/// <summary>
+///     Checks the database for a given package to exist and returns it, otherwise fetches package from upstream and caches
+///     it in the database.
+/// </summary>
 internal sealed class PackageDownloadEndpoint(IHttpClientFactory clientFactory, ILogger<PackageDownloadEndpoint> logger)
     : Endpoint<PackageDownloadRequest>
 {
