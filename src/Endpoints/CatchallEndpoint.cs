@@ -9,17 +9,9 @@ using NuGetCachingProxy.Core;
 
 namespace NuGetCachingProxy.Endpoints;
 
-internal sealed class CatchallEndpoint : EndpointWithoutRequest
+internal sealed class CatchallEndpoint(IOptions<ServiceConfig> options, IHttpClientFactory clientFactory)
+    : EndpointWithoutRequest
 {
-    private readonly IHttpClientFactory _clientFactory;
-    private readonly IOptions<ServiceConfig> _options;
-
-    public CatchallEndpoint(IOptions<ServiceConfig> options, IHttpClientFactory clientFactory)
-    {
-        _options = options;
-        _clientFactory = clientFactory;
-    }
-
     public override void Configure()
     {
         Get("{**catch-all}");
@@ -28,13 +20,13 @@ internal sealed class CatchallEndpoint : EndpointWithoutRequest
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        string upstreamUrl = new Uri(_options.Value.UpstreamUrl).GetLeftPart(UriPartial.Authority);
+        string upstreamUrl = new Uri(options.Value.UpstreamUrl).GetLeftPart(UriPartial.Authority);
 
         Uri requestUrl = new(HttpContext.Request.GetDisplayUrl());
         string backendUrl = requestUrl.GetLeftPart(UriPartial.Authority);
         string requestPath = requestUrl.AbsolutePath;
 
-        HttpClient client = _clientFactory.CreateClient("UpstreamNuGetServer");
+        HttpClient client = clientFactory.CreateClient("UpstreamNuGetServer");
 
         HttpResponseMessage response = await client.GetAsync(requestPath, ct);
 

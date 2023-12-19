@@ -44,13 +44,9 @@ builder.Services.AddHttpClient("UpstreamNuGetServer",
 
             client.BaseAddress = new Uri(serviceConfig.UpstreamUrl);
         })
-    .ConfigureHttpMessageHandlerBuilder(handlerBuilder =>
+    .ConfigurePrimaryHttpMessageHandler(_ => new HttpClientHandler
     {
-        // upstream JSON is compressed
-        handlerBuilder.PrimaryHandler = new HttpClientHandler
-        {
-            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-        };
+        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
     })
     .AddTransientHttpErrorPolicy(pb =>
         pb.WaitAndRetryAsync(Backoff.DecorrelatedJitterBackoffV2(TimeSpan.FromSeconds(3), 10)));

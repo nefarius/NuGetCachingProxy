@@ -8,17 +8,9 @@ using NuGetCachingProxy.Models;
 
 namespace NuGetCachingProxy.Endpoints;
 
-internal sealed class PackageDownloadEndpoint : Endpoint<PackageDownloadRequest>
+internal sealed class PackageDownloadEndpoint(IHttpClientFactory clientFactory, ILogger<PackageDownloadEndpoint> logger)
+    : Endpoint<PackageDownloadRequest>
 {
-    private readonly IHttpClientFactory _clientFactory;
-    private readonly ILogger<PackageDownloadEndpoint> _logger;
-
-    public PackageDownloadEndpoint(IHttpClientFactory clientFactory, ILogger<PackageDownloadEndpoint> logger)
-    {
-        _clientFactory = clientFactory;
-        _logger = logger;
-    }
-
     public override void Configure()
     {
         Get("/v3-flatcontainer/{PackageId}/{PackageVersion}/{PackageFileName}");
@@ -42,7 +34,7 @@ internal sealed class PackageDownloadEndpoint : Endpoint<PackageDownloadRequest>
             {
                 IPAddress? remoteIpAddress = HttpContext.Request.HttpContext.Connection.RemoteIpAddress;
 
-                _logger.LogInformation("[{IpAddress}] Found cached package {Package}", remoteIpAddress,
+                logger.LogInformation("[{IpAddress}] Found cached package {Package}", remoteIpAddress,
                     existingPackage);
 
                 // deliver cached copy of symbol blob
@@ -55,19 +47,19 @@ internal sealed class PackageDownloadEndpoint : Endpoint<PackageDownloadRequest>
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogWarning(ex, "Failed to deliver cached package, fetching from upstream");
+            logger.LogWarning(ex, "Failed to deliver cached package, fetching from upstream");
         }
 
-        _logger.LogInformation("Fetching package {Package} from upstream", req);
+        logger.LogInformation("Fetching package {Package} from upstream", req);
 
-        HttpClient client = _clientFactory.CreateClient("UpstreamNuGetServer");
+        HttpClient client = clientFactory.CreateClient("UpstreamNuGetServer");
 
         HttpResponseMessage response =
             await client.GetAsync($"/v3-flatcontainer/{req.PackageId}/{req.PackageVersion}/{req.PackageFileName}", ct);
 
         if (!response.IsSuccessStatusCode)
         {
-            _logger.LogInformation("Requested package {Package} not found upstream", req);
+            logger.LogInformation("Requested package {Package} not found upstream", req);
 
             await SendNotFoundAsync(ct);
             return;
