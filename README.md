@@ -18,6 +18,5 @@ docker build -t containinger/nugetcachingproxy:latest . ; docker push containing
 
 This application benefits from these awesome projects ❤ (appearance in no special order):
 
-- [Microsoft YARP](https://microsoft.github.io/reverse-proxy/)
 - [FastEndpoints](https://fast-endpoints.com/)
 - [MongoDB Entities](https://mongodb-entities.com/)
