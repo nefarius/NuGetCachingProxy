@@ -1,8 +1,8 @@
+global using FastEndpoints;
+
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
-
-using FastEndpoints;
 
 using MongoDB.Driver;
 using MongoDB.Entities;
